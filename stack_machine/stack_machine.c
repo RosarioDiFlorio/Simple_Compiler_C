@@ -19,9 +19,37 @@ void printStack(struct stackNode *top){
 }
 
 
-void swap(struct stackNode *a, struct stackNode *b){
-				
+void swap(struct stackNode *top){
+		struct stackNode *tmp;
+		struct stackNode *head;
+		
+		head = top->next; //s
+		top->next = top->next->next;
+		tmp = top->next->next;
+		top->next->next = tmp->next;
+		tmp->next = head->next;
+		top->next = tmp;
+		
+}
 
+void evaluate(struct stackNode *top){
+	struct stackNode *p = top->next;
+		//printf("%s\n",p->data);
+		if(strcmp(p->data,"s")==0){
+			swap(top);
+		}else if(strcmp(p->data,"+")==0){
+			struct stackNode *tmp = p->next;
+			int a = atoi(tmp->data);
+			tmp = tmp->next;
+			int b = atoi(tmp->data);
+			int ris = a + b;
+			sprintf(tmp->data, "%d", ris);
+			p = tmp;
+				 top->next = p;
+		}		
+		
+			
+	
 }
 
 int main()
@@ -34,15 +62,18 @@ int main()
 	int flag = 1;
 	char buff[128];
 	while(flag){
+		printf(">");
 		scanf("%s", buff);
 		//printf("%s\n",buff);
 		if(strcmp(buff,"d")== 0){
 			//printf("print\n");		
 			printStack(top);
 		}else if(strcmp(buff,"e")== 0){
+			evaluate(top);
 			//printf("evaluate\n");		
 		}else if(strcmp(buff,"x")== 0){
-			//printf("exit\n");		
+			//printf("exit\n");	
+			flag = 0;	
 		}else{
 			//printf("inserisco\n");		
 			newNode = malloc(sizeof(struct stackNode));
@@ -56,8 +87,8 @@ int main()
 			newNode = NULL;
 		}
 	}		
-
-
+	printf("bye\n");
+	exit(0);
 }
 
 
