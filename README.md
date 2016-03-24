@@ -1,6 +1,5 @@
 # Compilers_course
-In this project you can find the exercises to create a simple compiler in the C language,these may be used to understand the issues 
-of the C language
+In this project you can find the exercises to create a simple compiler in the C language,these may be used to understand the issues of the C language
 
 Stack_machine :
   We did a simple stack machine that support addition and subtraction with a stack.
@@ -12,5 +11,4 @@ Stack_machine :
           this commad evaluates the expression contained into the stack.
   
 Interpreter:
-  The interpreter takes a mathematical expression in normal form (1 + 2 - 3) and converts this expression into a expression for the
-  stack machine (12+e3-e).
+  The interpreter takes a mathematical expression in normal form (1 + 2 - 3) and converts this expression into a expression for the stack machine (12+e3-e).
