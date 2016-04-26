@@ -9,6 +9,4 @@ Stack_machine :
     - (d) this command prints the stack of the stack machine
     - (e) if there is into the stack an mathematical operator like + or - 
           this commad evaluates the expression contained into the stack.
-  
-Interpreter:
-  The interpreter takes a mathematical expression in normal form (1 + 2 - 3) and converts this expression into a expression for the stack machine (12+e3-e).
+  This folder cointains also an interpreter that takes a mathematical expression in normal form (1 + 2 - 3) and converts this expression into a expression for the stack machine (12+e3-e).
