@@ -114,45 +114,65 @@ terminal
     ;
 
     
-non terminal declaration;
+non terminal program;
 non terminal var_declaration;
 non terminal function_declaration;
 non terminal type_var; 
 non terminal type_specifier;
-non terminal struct_specifier;
 non terminal type_sign;  
 non terminal type_var_sign_unsign;              /*variabili a cui posso far precedere SIGNED | UNSIGNED */
 non terminal param_list;
-non terminal function_body;
 non terminal statement;
 non terminal expression;
 non terminal operator;
 non terminal assignment_operator;
+non terminal rpar_generic;
+non terminal lpar_generic;
+non terminal boolean_operator;
+non terminal loop_statement;
 
- start with declaration;
+precedence left SEMICOLON;
+precedence left OROR;
+precedence left ANDAND;
+precedence left OR;
+precedence left XOR;
+precedence left AND;
+precedence left EQEQ ,NOTEQ,NOT;
+precedence left LT ,GT, LTEQ ,GTEQ;
+precedence left MINUS, PLUS;
+precedence left MULT, DIV,MOD;
+
+
+ start with program;
  
  
-declaration             
+program             
                         ::= 
-                        var_declaration declaration               {: System.out.println("var_declaration"); :}                /* dichiarazione variabili */
-                        |function_declaration declaration         {: System.out.println("function_declaration"); :}           /* dichiarazione funzioni */
+                        var_declaration program                {: System.out.println("var_declaration"); :}                /* dichiarazione variabili */
+                        |function_declaration program          {: System.out.println("function_declaration"); :}           /* dichiarazione funzioni */
+                        |expression program
                         |
                         ;
+                        
+                        
+
                 
 var_declaration         
                         ::=
                         type_var ID:id SEMICOLON
-                        | type_var ID:id EQ CONSTANT SEMICOLON
-                        | struct_specifier:su ID:id SEMICOLON
-                        | struct_specifier:su ID:id EQ NULL_LITERAL SEMICOLON
+                        | type_var ID:id EQ expression SEMICOLON
                         ;
+                        
                     
-type_var_sign_unsign    ::=  
+type_var_sign_unsign    
+                        ::=  
                         type_sign CHAR_TYPE:type
                         | type_sign SHORT_TYPE:type
                         | type_sign INT_TYPE:type
                         | type_sign LONG_TYPE:type
                         ;
+                        
+                      
                         
 type_var               
                         ::=
@@ -164,15 +184,15 @@ type_var
 type_sign             
                         ::=
                         SIGNED
-                        | UNSIGNED
+                        |UNSIGNED
                         |
                         ;            
                     
                     
 function_declaration    
                         ::=  
-                        type_var ID:id LPAREN param_list  RPAREN LBRACE function_body RBRACE
-                        | type_specifier ID:id LPAREN param_list RPAREN LBRACE function_body RBRACE
+                        type_var ID:id LPAREN param_list  RPAREN LBRACE statement RBRACE
+                        | type_specifier ID:id LPAREN param_list RPAREN LBRACE statement RBRACE
                         ;
 
 
@@ -182,46 +202,65 @@ type_specifier
                         ;
 
 
-struct_specifier
-                        ::=
-                        ID
-                        ;
-
-            
+                        
             
 param_list
                         ::=
                         type_var ID:id COMMA param_list
                         |type_var ID:id 
-                        |struct_specifier:su ID:id COMMA param_list
-                        |struct_specifier:su ID:id
                         ;
                         
                         
-function_body
-                        ::=
-                        var_declaration function_body
-                        |statement function_body
-                        |
-                        ;
-                     
-                     
 statement
                         ::=
-                        expression SEMICOLON
+                        var_declaration statement
+                        |expression statement
+                        |
                         ;
-                        
+                    
+loop_statement
+                        ::=
+                        expression loop_statement
+                        |expression
+                        ;
 
-expression              ::= 
                         
+expression              
+                        ::=     
+                        expression:e1 operator:op expression:e2 SEMICOLON
+                        |expression:e1 operator:op expression:e2
+                        |expression:e1 boolean_operator:op expression:e2 
+                        |expression:e1 boolean_operator:op expression:e2 SEMICOLON
+                        |ID:e1 assignment_operator expression:e2 SEMICOLON
+                        |ID:e1 assignment_operator expression:e2
+                        |lpar_generic expression rpar_generic
+                        |IF LPAREN loop_statement RPAREN LBRACE statement RBRACE 
+                        |WHILE LPAREN loop_statement RPAREN LBRACE statement RBRACE 
+                        |FOR LPAREN loop_statement  RPAREN LBRACE statement RBRACE
+                        |ID 
+                        |CONSTANT
                         ;                        
                         
+
+lpar_generic 
+                        ::=
+                        LPAREN
+                        |LBRACK
+                        ;
+                        
+                        
+rpar_generic
+                        ::=
+                        RPAREN
+                        |RBRACK
+                        ;
+                       
+                       
                         
 operator
                         ::=
                         MULT
                         |DIV
-                        |MULT
                         |MINUS
                         |XOR
                         |PLUS
@@ -229,6 +268,12 @@ operator
                         |OR
                         |MOD
                         ;
+                        
+                        
+                        
+
+                        
+                        
 
 assignment_operator
                         ::= 
@@ -244,5 +289,20 @@ assignment_operator
                         |XOREQ     
                         |OREQ      
                         ;
+                        
+                        
+boolean_operator
+                        ::= 
+                        EQEQ
+                        |ANDAND
+                        |OROR
+                        |LT
+                        |GT
+                        |LTEQ
+                        |GTEQ
+                        |NOT
+                        |NOTEQ
+                        ;
 
-                            
+      
+                        
