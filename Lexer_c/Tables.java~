@@ -1,0 +1,12 @@
+import java.util.Hashtable;
+
+public class Tables {
+	
+	public  Hashtable symTable = new Hashtable();
+	public  Hashtable stringTable = new Hashtable();
+	public  Hashtable numTable = new Hashtable();
+	
+	
+
+}
+

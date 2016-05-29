@@ -1,0 +1,248 @@
+import java.io.*;
+import java_cup.runtime.*;
+import java.util.*;
+
+ 
+
+parser code {:
+    public void syntax_error(Symbol cur_token){
+	System.err.println("Syntax error at "+cur_token);
+    }
+   
+
+    public static void main(String args[]) {
+	try {
+	    CLexer lexer = new CLexer(new FileReader(args[0]));
+	    // start parsing
+	    Parser p = new Parser(lexer);
+	    System.out.println("Parser runs: ");
+            p.parse();
+	    System.out.println("Parsing finished!");
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} 
+    }
+:};
+
+
+terminal
+    DOT,
+    EQ,
+    AND,
+    NULL_LITERAL,
+    ERROR,
+    ID,
+    CONSTANT, 
+    STRING, 
+    SIZEOF, 
+    PTR_OP, 
+    PLUSPLUS, 
+    MINUSMINUS, 
+    LSHIFT, 
+    RSHIFT, 
+    LTEQ, 
+    GTEQ,
+    EQEQ, 
+    NOTEQ, 
+    ANDAND, 
+    OROR, 
+    MULTEQ,
+    DIVEQ, 
+    MODEQ, 
+    PLUSEQ,
+    MINUSEQ, 
+    LSHIFTEQ,
+    RSHIFTEQ,
+    ANDEQ,
+    XOREQ,
+    OREQ,
+    TYPE_NAME,
+    TYPEDEF, 
+    EXTERN, 
+    STATIC, 
+    AUTO, 
+    REGISTER,
+    CHAR_TYPE, 
+    SHORT_TYPE, 
+    INT_TYPE, 
+    LONG_TYPE, 
+    SIGNED, 
+    UNSIGNED, 
+    FLOAT_TYPE, 
+    DOUBLE_TYPE, 
+    CONST, 
+    VOLATILE, 
+    VOID, 
+    STRUCT, 
+    ENUM, 
+    ELLIPSIS,
+    CASE, 
+    DEFAULT, 
+    IF, 
+    ELSE, 
+    SWITCH, 
+    WHILE, 
+    DO, 
+    FOR, 
+    GOTO, 
+    CONTINUE, 
+    BREAK, 
+    RETURN,
+    SEMICOLON, 
+    LBRACE, 
+    RBRACE, 
+    COMMA, 
+    COLON, 
+    LPAREN, 
+    RPAREN, 
+    LBRACK, 
+    RBRACK, 
+    POINT_TYPE,
+    ADRESS, 
+    NOT, 
+    COMP, 
+    MINUS, 
+    PLUS, 
+    MULT, 
+    DIV, 
+    MOD, 
+    LT, 
+    GT, 
+    XOR, 
+    OR, 
+    QUESTION
+    ;
+
+    
+non terminal declaration;
+non terminal var_declaration;
+non terminal function_declaration;
+non terminal type_var; 
+non terminal type_specifier;
+non terminal struct_specifier;
+non terminal type_sign;  
+non terminal type_var_sign_unsign;              /*variabili a cui posso far precedere SIGNED | UNSIGNED */
+non terminal param_list;
+non terminal function_body;
+non terminal statement;
+non terminal expression;
+non terminal operator;
+non terminal assignment_operator;
+
+ start with declaration;
+ 
+ 
+declaration             
+                        ::= 
+                        var_declaration declaration               {: System.out.println("var_declaration"); :}                /* dichiarazione variabili */
+                        |function_declaration declaration         {: System.out.println("function_declaration"); :}           /* dichiarazione funzioni */
+                        |
+                        ;
+                
+var_declaration         
+                        ::=
+                        type_var ID:id SEMICOLON
+                        | type_var ID:id EQ CONSTANT SEMICOLON
+                        | struct_specifier:su ID:id SEMICOLON
+                        | struct_specifier:su ID:id EQ NULL_LITERAL SEMICOLON
+                        ;
+                    
+type_var_sign_unsign    ::=  
+                        type_sign CHAR_TYPE:type
+                        | type_sign SHORT_TYPE:type
+                        | type_sign INT_TYPE:type
+                        | type_sign LONG_TYPE:type
+                        ;
+                        
+type_var               
+                        ::=
+                        FLOAT_TYPE:type
+                        | DOUBLE_TYPE:type
+                        | type_var_sign_unsign:type        /*variabili a cui posso far precedere SIGNED | UNSIGNED */
+                        ;              
+                    
+type_sign             
+                        ::=
+                        SIGNED
+                        | UNSIGNED
+                        |
+                        ;            
+                    
+                    
+function_declaration    
+                        ::=  
+                        type_var ID:id LPAREN param_list  RPAREN LBRACE function_body RBRACE
+                        | type_specifier ID:id LPAREN param_list RPAREN LBRACE function_body RBRACE
+                        ;
+
+
+type_specifier
+                        ::=
+                        VOID:type
+                        ;
+
+
+struct_specifier
+                        ::=
+                        ID
+                        ;
+
+            
+            
+param_list
+                        ::=
+                        type_var ID:id COMMA param_list
+                        |type_var ID:id 
+                        |struct_specifier:su ID:id COMMA param_list
+                        |struct_specifier:su ID:id
+                        ;
+                        
+                        
+function_body
+                        ::=
+                        var_declaration function_body
+                        |statement function_body
+                        |
+                        ;
+                     
+                     
+statement
+                        ::=
+                        expression SEMICOLON
+                        ;
+                        
+
+expression              ::= 
+                        
+                        ;                        
+                        
+                        
+operator
+                        ::=
+                        MULT
+                        |DIV
+                        |MULT
+                        |MINUS
+                        |XOR
+                        |PLUS
+                        |AND
+                        |OR
+                        |MOD
+                        ;
+
+assignment_operator
+                        ::= 
+                        EQ
+                        |MULTEQ     
+                        |DIVEQ     
+                        |MODEQ     
+                        |PLUSEQ     
+                        |MINUSEQ     
+                        |LSHIFTEQ    
+                        |RSHIFTEQ   
+                        |ANDEQ     
+                        |XOREQ     
+                        |OREQ      
+                        ;
+
+                            

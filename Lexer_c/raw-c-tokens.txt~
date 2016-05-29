@@ -1,0 +1,66 @@
+/* This file is just a bunch of pascal tokens.  The lexer should recognize them
+  in this form just fine. */
+break
+byte
+case
+catch
+char
+const
+continue
+do
+double
+else
+extends"                      { return newSym(sym.EXTENDS); }
+
+  "int"                          { return newSym(sym.INT_TYPE); }
+  "long"                         { return newSym(sym.LONG_TYPE); }
+  "goto"                         { return newSym(sym.GOTO); }
+  "if"                           { return newSym(sym.IF); } 
+  "short"                        { return newSym(sym.SHORT_TYPE); }
+  "switch"                       { return newSym(sym.SWITCH); }
+  "return"                       { return newSym(sym.RETURN); }
+  "void"                         { return newSym(sym.VOID); }
+  "static"                       { return newSym(sym.STATIC); }
+  "while"                        { return newSym(sym.WHILE); }
+  "this"                         { return newSym(sym.THIS); }
+
+  
+*
++
+-
+/
+;
+,
+(
+)
+[
+]
+=
+<
+>
+<=
+>=
+!=
+:
+:=
+.
+a
+b
+c
+abc
+The_quick_brown_fox_jumped_over_the_lazy_dogs_0123456789
+0
+1
+2
+3
+01
+1234567890
+1.0
+1.23
+1234567890.0123456789
+000001.0000000
+'a'
+'b'
+'c'
+'!'
+'\u2297'
