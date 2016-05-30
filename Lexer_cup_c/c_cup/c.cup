@@ -130,8 +130,15 @@ non terminal rpar_generic;
 non terminal lpar_generic;
 non terminal boolean_operator;
 non terminal loop_statement;
+non terminal for_loop_statement;
+non terminal assignment_expression;
+non terminal cond_expression;
+non terminal statement_list;
+non terminal cond_statement;
+non terminal call_function;
+non terminal param_list_call;
 
-precedence left SEMICOLON;
+
 precedence left OROR;
 precedence left ANDAND;
 precedence left OR;
@@ -148,23 +155,24 @@ precedence left MULT, DIV,MOD;
  
 program             
                         ::= 
-                        var_declaration program                {: System.out.println("var_declaration"); :}                /* dichiarazione variabili */
-                        |function_declaration program          {: System.out.println("function_declaration"); :}           /* dichiarazione funzioni */
-                        |expression program
+                        function_declaration program          {: System.out.println("function_declaration"); :}           /* dichiarazione funzioni */
+                        |statement program
                         |
                         ;
                         
                         
 
+
                 
 var_declaration         
                         ::=
-                        type_var ID:id SEMICOLON
-                        | type_var ID:id EQ expression SEMICOLON
+                        type_var ID:id 
+                        | type_var ID:id assignment_operator expression
                         ;
-                        
+
+
                     
-type_var_sign_unsign    
+type_var_sign_unsign    6ipoè
                         ::=  
                         type_sign CHAR_TYPE:type
                         | type_sign SHORT_TYPE:type
@@ -187,13 +195,18 @@ type_sign
                         |UNSIGNED
                         |
                         ;            
-                    
+
+call_function
+                        ::=
+                        ID:id LPAREN param_list_call RPAREN
+                        ;
                     
 function_declaration    
                         ::=  
-                        type_var ID:id LPAREN param_list  RPAREN LBRACE statement RBRACE
-                        | type_specifier ID:id LPAREN param_list RPAREN LBRACE statement RBRACE
+                        type_var ID:id LPAREN param_list  RPAREN cond_statement
+                        | type_specifier ID:id LPAREN param_list RPAREN cond_statement
                         ;
+
 
 
 type_specifier
@@ -202,33 +215,87 @@ type_specifier
                         ;
 
 
-                        
+param_list_call
+                        ::=
+                        ID:id COMMA param_list_call
+                        |ID:id
+                        |call_function COMMA param_list_call
+                        |call_function
+                        |
+                        ;
             
 param_list
                         ::=
                         type_var ID:id COMMA param_list
-                        |type_var ID:id 
+                        |type_var ID:id
+                        |
                         ;
                         
-                        
+statement_list 
+                        ::=
+                        statement statement_list
+                        |statement
+                        ;
+
 statement
                         ::=
-                        var_declaration statement
-                        |expression statement
-                        |
+                        var_declaration SEMICOLON
+                        |expression SEMICOLON
+                        |assignment_expression SEMICOLON
+                        |cond_expression
+                        |call_function SEMICOLON
+                        |SEMICOLON
                         ;
                     
 loop_statement
                         ::=
-                        expression loop_statement
-                        |expression
+                        expression
+                        |assignment_expression
+                        |cond_expression
+                        ;
+for_loop_statement
+                        ::=
+                        loop_statement
+                        |
                         ;
 
+
+
+assignment_expression
+                        ::=
+                        ID:e1 assignment_operator expression:e2
+                        ;
+    
+
+cond_expression
+                        ::=
+                        IF LPAREN loop_statement RPAREN cond_statement
+                        |WHILE LPAREN loop_statement RPAREN cond_statement
+                        |FOR LPAREN for_loop_statement SEMICOLON for_loop_statement SEMICOLON for_loop_statement RPAREN cond_statement
+                        ;
                         
+cond_statement
+                        ::=
+                        LBRACE statement_list RBRACE
+                        |LBRACE RBRACE
+                        |statement
+                        ;
+                        
+expression 
+                        ::=
+                        expression:e1 operator:op expression:e2 
+                        |expression:e1 boolean_operator:op expression:e2
+                        |lpar_generic expression rpar_generic
+                        |ID 
+                        |CONSTANT
+                        
+                        ;
+/*                        
 expression              
                         ::=     
                         expression:e1 operator:op expression:e2 SEMICOLON
                         |expression:e1 operator:op expression:e2
+                        
                         |expression:e1 boolean_operator:op expression:e2 
                         |expression:e1 boolean_operator:op expression:e2 SEMICOLON
                         |ID:e1 assignment_operator expression:e2 SEMICOLON
@@ -240,7 +307,7 @@ expression
                         |ID 
                         |CONSTANT
                         ;                        
-                        
+  */                      
 
 lpar_generic 
                         ::=

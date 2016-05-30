@@ -1,7 +1,7 @@
 int mia = 4;
 mis = 3;
 unsigned int a = [mi *(5 + 3)];
-void ciao(int a, char b){
+int ciao(int a, char b){
     int a;
     a = 10;
     a + b;
