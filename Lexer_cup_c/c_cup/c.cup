@@ -137,7 +137,9 @@ non terminal statement_list;
 non terminal cond_statement;
 non terminal call_function;
 non terminal param_list_call;
-
+non terminal list_number;
+non terminal array_statement;
+non terminal array_declaration;
 
 precedence left OROR;
 precedence left ANDAND;
@@ -170,7 +172,26 @@ var_declaration
                         | type_var ID:id assignment_operator expression
                         ;
 
+list_number
+                        ::=
+                        CONSTANT COMMA list_number
+                        |CONSTANT
+                        ;
+                        
+array_statement
+                        ::=
+                        LBRACE RBRACE
+                        |LBRACE list_number RBRACE
+                        
+                        ;
+                        
 
+array_declaration       
+                        ::=
+                        type_var ID:id LBRACK CONSTANT RBRACK
+                        |type_var ID:id LBRACK CONSTANT RBRACK EQ array_statement
+                        
+                        ;
                     
 type_var_sign_unsign    
                         ::=  
@@ -244,6 +265,7 @@ statement
                         |assignment_expression SEMICOLON
                         |cond_expression
                         |call_function SEMICOLON
+                        |array_declaration SEMICOLON
                         |SEMICOLON
                         ;
                     
@@ -264,6 +286,7 @@ for_loop_statement
 assignment_expression
                         ::=
                         ID:e1 assignment_operator expression:e2
+                        |ID:e1 LBRACK CONSTANT RBRACK assignment_operator expression:e2
                         ;
     
 
