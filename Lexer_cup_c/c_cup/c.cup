@@ -172,7 +172,7 @@ var_declaration
 
 
                     
-type_var_sign_unsign    6ipoè
+type_var_sign_unsign    
                         ::=  
                         type_sign CHAR_TYPE:type
                         | type_sign SHORT_TYPE:type
