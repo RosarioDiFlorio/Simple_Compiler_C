@@ -2,14 +2,6 @@
 #include <stdlib.h>
 
 
-void printStackM(struct stackNode *top){
-	struct stackNode *p;
-	p = top->next;	
-	while(p != NULL){
-		printf("%s\n",p->data);
-		p = p->next;	
-	}
-}
 
 
 void swap(struct stackNode *top){
@@ -17,6 +9,7 @@ void swap(struct stackNode *top){
 		struct stackNode *head;
 		
 		head = top->next; //s
+		printf("swap: %s\n",head->data);
 		top->next = top->next->next;
 		tmp = top->next->next;
 		top->next->next = tmp->next;
@@ -25,49 +18,43 @@ void swap(struct stackNode *top){
 		
 }
 
-void evaluate(struct stackNode *top){
-	struct stackNode *p = top->next;
-		//printf("%s\n",p->data);
-		if(strcmp(p->data,"s")==0){
-			swap(top);
-		}else if(strcmp(p->data,"+")==0){
-			struct stackNode *tmp = p->next;
-			int a = atoi(tmp->data);
-			tmp = tmp->next;
-			int b = atoi(tmp->data);
-			int ris = a + b;
-			sprintf(tmp->data, "%d", ris);
-			p = tmp;
-				 top->next = p;
-		}else if(strcmp(p->data,"-") == 0){
-			struct stackNode *tmp = p->next;
-			int a = atoi(tmp->data);
-			tmp = tmp->next;
-			int b = atoi(tmp->data);
-			int ris = a - b;
-			sprintf(tmp->data, "%d", ris);
-			p = tmp;
-			top->next = p;
 
-		}else if(strcmp(p->data,"*") == 0){
-			struct stackNode *tmp = p->next;
-			int a = atoi(tmp->data);
-			tmp = tmp->next;
-			int b = atoi(tmp->data);
-			int ris = a * b;
-			sprintf(tmp->data, "%d", ris);
-			p = tmp;
-			top->next = p;
-		
-		}else if(strcmp(p->data,"/") == 0){
-			struct stackNode *tmp = p->next;
-			int a = atoi(tmp->data);
-			tmp = tmp->next;
-			int b = atoi(tmp->data);
-			int ris = a / b;
-			sprintf(tmp->data, "%d", ris);
-			p = tmp;
-			top->next = p;		
+void evaluate(struct stackNode *top){
+		char *str;
+		char toPop[128];
+		char buff[128];
+		str = getTop(top);
+		//printf("top: %s\n",str);
+		if(strcmp(str,"s")==0){
+			swap(top);
+		}else if(strcmp(str,"+")==0){
+			//printf("tolgo l'operatore\n");
+			top = pop(top,toPop); //tolgo l'operatore
+			//printf("%s\n",toPop);
+			//printf("tolgo il secondo operando\n");
+			top = pop(top,toPop); // secondo operando
+			//printf("%s\n",toPop);
+			int b = atoi(toPop);
+			//printf("tolgo il primo operando\n");			
+			top = pop(top,toPop); // primo operando
+			//printf("%s\n",toPop);
+			int a = atoi(toPop);
+			//printf("sommo: %d + %d\n",a,b);
+			int ris = a + b;
+			//printf("ris: %d\n", ris);
+			sprintf(buff, "%d", ris);
+			top = push(top,buff);
+			
+		}else if(strcmp(str,"-")==0){
+			top = pop(top,toPop);//tolgo l'operatore
+			top = pop(top,toPop); // secondo operando
+			int b = atoi(toPop);
+			top = pop(top,toPop); // primo operando
+			int a = atoi(toPop);
+			int ris = a - b;
+			sprintf(buff, "%d", ris);
+			top = push(top,buff);
+			
 		}	
 		
 			
@@ -75,69 +62,22 @@ void evaluate(struct stackNode *top){
 }
 
 void process(char *buff,struct stackNode *top){
-	
-		struct stackNode *newNode = NULL;
-		//printf("%s\n",buff);
+	    printf("stato della stack machine:\n");
+		printf("###########################\n");
+		printStack(top);
+		printf("###########################\n");
 		if(strcmp(buff,"e")== 0){
+			printf("\nevaluate\n\n");
 			evaluate(top);
-			//printf("evaluate\n");		
+					
 		}else{
-			//printf("inserisco\n");		
-			newNode = malloc(sizeof(struct stackNode));
-			newNode->data = (char*)malloc(sizeof(buff) + 1);
-			strcpy(newNode->data,buff);
-			if(top->next == NULL)
-				newNode->next = NULL;			
-			else
-				newNode->next = top->next;
-			top->next = newNode;
-			newNode = NULL;
+			printf("\ninserisco\n\n");		
+			top = push(top,buff);
 		}
 			
 	
 
 }
 
-/*
 
-//######test####
-int main()
-{	
-	int len = 0;
-	struct stackNode *top = malloc(sizeof(struct stackNode));
-	struct stackNode *newNode = NULL;	
-	top->data = NULL;
-	top->next = NULL;
-	int flag = 1;
-	char buff[128];
-	while(flag){
-		printf(">");
-		scanf("%s", buff);
-		//printf("%s\n",buff);
-		if(strcmp(buff,"d")== 0){
-			//printf("print\n");		
-			printStack(top);
-		}else if(strcmp(buff,"e")== 0){
-			evaluate(top);
-			//printf("evaluate\n");		
-		}else if(strcmp(buff,"x")== 0){
-			//printf("exit\n");	
-			flag = 0;	
-		}else{
-			//printf("inserisco\n");		
-			newNode = malloc(sizeof(struct stackNode));
-			newNode->data = (char*)malloc(sizeof(buff) + 1);
-			strcpy(newNode->data,buff);
-			if(top->next == NULL)
-				newNode->next = NULL;			
-			else
-				newNode->next = top->next;
-			top->next = newNode;
-			newNode = NULL;
-		}
-	}		
-	printf("bye\n");
-	exit(0);
-}
-*/
-
+			

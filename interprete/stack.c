@@ -8,6 +8,13 @@ struct stackNode
    
 };
 
+char* getTop(struct stackNode *top){
+	if(!isEmpty(top))
+		return top->next->data;
+	return NULL;
+}
+
+
 struct stackNode* push(struct stackNode *top,char *buff){
 		struct stackNode *newNode = NULL;	
 		//printf("inserisco\n");		
